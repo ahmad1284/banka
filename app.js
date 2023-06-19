@@ -1,8 +1,12 @@
-let account = null;
+let state = Object.freeze({
+    account: null
+});
+
+const storageKey = 'savedAccount';
 
 const routes = {
     '/login': {templateId: 'login', title: 'Login | Bank App'},
-    '/dashboard': {templateId: 'dashboard', init: updateDashboard, title: 'Dashboard | Bank App'},
+    '/dashboard': {templateId: 'dashboard', init: refresh, title: 'Dashboard | Bank App'},
     '/credz': {templateId: 'credz'}
 };
 
@@ -12,7 +16,7 @@ function updateRoute() {
 
     // if no route specified
     if (!route){
-        return navigate('login');
+        return navigate('/dashboard');
     }
 
     const template = document.getElementById(route.templateId);
@@ -30,7 +34,7 @@ function updateRoute() {
     }
 }
 
- updateRoute();
+ 
 
 // reload path without reloading
  function navigate(path) {
@@ -56,7 +60,7 @@ async function register() {
     
     console.log('Account created!', result);
 
-    account = result;
+    updateState('account', result);
     navigate('/dashboard')
 }
 
@@ -82,9 +86,14 @@ async function login() {
       return updateElement('loginError', data.error);
     }
   
-    account = data;
+    updateState('account', data);
     navigate('/dashboard');
   }
+
+function logout() {
+    updateState('account', null);
+    navigate('/login');
+}
 
 async function getAccount(user) {
     try {
@@ -114,6 +123,7 @@ function updateElement(id, textOrNode){
 }
 
 function updateDashboard() {
+    const account = state.account;
     if (!account) {
         return navigate('/login');
     }
@@ -131,5 +141,46 @@ function updateDashboard() {
 
 }
 
-window.onpopstate = () => updateRoute();
-updateRoute();
+function updateState(property, newData){
+    state = Object.freeze({
+        ...state,
+        [property]: newData
+    });
+    // console.log("State: \\>")
+    // console.log(state);
+
+    localStorage.setItem(storageKey, JSON.stringify(state.account));
+}
+
+
+async function updateAccountData() {
+    const account =state.account;
+    if (!account) {
+        return logout();
+    }
+
+    const data = await getAccount(account.user);
+    if (data.error) {
+        return logout();
+    }
+
+    updateState('account', data);
+}
+
+async function refresh(){
+    await updateAccountData();
+    updateDashboard();
+}
+
+function init() {
+    const savedAccount = localStorage.getItem(storageKey);
+    if (savedAccount) {
+        updateState('account', JSON.parse(savedAccount));
+    }
+
+    window.onpopstate = () => updateRoute();
+    updateRoute();
+
+}
+
+init();
