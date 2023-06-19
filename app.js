@@ -179,6 +179,16 @@ function addTransaction() {
 
   // Set date to today
   transactionForm.date.valueAsDate = new Date();
+
+  // Add event listener for the 'Esc' key
+  window.addEventListener('keydown', handleEscKey);
+}
+
+function handleEscKey(event) {
+  if (event.key === 'Escape' || event.key === 'Esc' || event.keyCode === 27) {
+    cancelTransaction();
+  }
+
 }
 
 async function confirmTransaction() {
@@ -210,11 +220,6 @@ async function confirmTransaction() {
 async function cancelTransaction() {
   const dialog = document.getElementById('transactionDialog');
   dialog.classList.remove('show');
-}
-
-async function letCancel() {
-    const dialog = document.getElementById('transactionDialog');
-    dialog.classList.remove('show');
 }
 
 function logout() {
