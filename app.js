@@ -2,7 +2,7 @@ let account = null;
 
 const routes = {
     '/login': {templateId: 'login', title: 'Login | Bank App'},
-    '/dashboard': {templateId: 'dashboard', title: 'Dashboard | Bank App'},
+    '/dashboard': {templateId: 'dashboard', init: updateDashboard, title: 'Dashboard | Bank App'},
     '/credz': {templateId: 'credz'}
 };
 
@@ -24,6 +24,10 @@ function updateRoute() {
     document.title = route.title;
 
     console.log(`${route.templateId} is shown`);
+
+    if (typeof route.init === 'function'){
+        route.init();
+    }
 }
 
  updateRoute();
@@ -75,7 +79,7 @@ async function login() {
     const data = await getAccount(user);
   
     if (data.error) {
-      return console.log('loginError', data.error);
+      return updateElement('loginError', data.error);
     }
   
     account = data;
@@ -89,6 +93,42 @@ async function getAccount(user) {
     } catch (error) {
         return { error: error.message || 'Unknown error'};
     }
+}
+
+function createTransactionRow(transaction) {
+    const template = document.getElementById('transaction');
+    const transactionRow = template.content.cloneNode(true);
+    const tr = transactionRow.querySelector('tr');
+
+    tr.children[0].textContent = transaction.date;
+    tr.children[1].textContent = transaction.object;
+    tr.children[2].textContent = transaction.amount.toFixed(2);
+
+    return transactionRow;
+}
+
+function updateElement(id, textOrNode){
+    const element = document.getElementById(id);
+    element.textContent = '';
+    element.append(textOrNode);
+}
+
+function updateDashboard() {
+    if (!account) {
+        return navigate('/login');
+    }
+
+    updateElement('description', account.description);
+    updateElement('balance', account.balance.toFixed(2));
+    updateElement('currency', account.currency);
+
+    const transactionRows = document.createDocumentFragment();
+    for (const transaction of account.transactions) {
+        const transactionRow = createTransactionRow(transaction);
+        transactionRows.appendChild(transactionRow);
+    }
+    updateElement('transactions', transactionRows);
+
 }
 
 window.onpopstate = () => updateRoute();
