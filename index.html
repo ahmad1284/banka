@@ -2,18 +2,18 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank App</title>
+    <title>Squirrel Banking</title>
     <link rel="stylesheet" href="style.css">
     <script src="app.js" defer></script>
 </head>
 
 <body>
-    <!-- TODO: Add a loader or a loading indicator until projects start-->
+    <!-- Placeholder where we will insert our app HTML based on route -->
     <div id="app">Loading...</div>
 
-    <!-- Login page template-->
+    <!-- Login page template -->
     <template id="login">
         <section class="login-page">
             <div class="login-container">
@@ -91,7 +91,7 @@
                     <input id="amount" name="amount" type="number" value="0" step="any" required>
                     <div id="transactionError" class="error" role="alert"></div>
                     <div class="dialog-buttons">
-                        <button type="button" class="button-alt" formaction="javascript:cancelTransaction()"
+                        <button type="button" class="button-alt" onclick="cancelTransaction()"
                             formnovalidate>Cancel</button>
                         <button formaction="javascript:confirmTransaction()">OK</button>
                     </div>
@@ -108,7 +108,6 @@
             <td></td>
         </tr>
     </template>
-
     <template id="credz">
         <header>
             <h1>Bank App</h1>
