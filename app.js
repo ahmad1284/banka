@@ -2,7 +2,7 @@
 // Constants
 // ---------------------------------------------------------------------------
 
-const serverUrl = 'http://ahmadsadri.me:5000/api';
+const serverUrl = 'https://api.kigombo.live/api';
 const storageKey = 'savedAccount';
 
 // ---------------------------------------------------------------------------
