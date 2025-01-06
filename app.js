@@ -2,7 +2,8 @@
 // Constants
 // ---------------------------------------------------------------------------
 
-const serverUrl = 'https://kigombo-be-7855b43eb5fb.herokuapp.com/api';
+// const serverUrl = 'https://kigombo-be-7855b43eb5fb.herokuapp.com/api';
+const serverUrl = 'https://kigombobeta-f9f2f4b59adf.herokuapp.com/api' ;
 const storageKey = 'savedAccount';
 
 // ---------------------------------------------------------------------------
